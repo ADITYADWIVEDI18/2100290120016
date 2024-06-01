@@ -1,4 +1,3 @@
-
 const express = require('express');
 const axios = require('axios');
 
@@ -9,21 +8,39 @@ const WINDOW_SIZE = 10;
 let numbersWindow = [];
 
 const fetchNumbers = async (type) => {
+  let apiUrl;
+  switch (type) {
+    case 'p':
+      apiUrl = 'http://20.244.56.144/test/primes';
+      break;
+    case 'f':
+      apiUrl = 'http://20.244.56.144/test/fibo';
+      break;
+    case 'e':
+      apiUrl = 'http://20.244.56.144/test/even';
+      break;
+    case 'r':
+      apiUrl = 'http://20.244.56.144/test/random';
+      break;
+    default:
+      return [];
+  }
+
   try {
-    const response = await axios.get(`http://20.244.56.144/test/${type}`, { timeout: 500 });
-    return response.data.numbers;
+    const response = await axios.get(apiUrl, { timeout: 500 });
+    return response.data.numbers || [];
   } catch (error) {
-    console.error('Error fetching numbers:', error);
+    console.error('Error fetching numbers:', error.message);
     return [];
   }
 };
 
 const calculateAverage = (numbers) => {
   const sum = numbers.reduce((acc, num) => acc + num, 0);
-  return (sum / numbers.length).toFixed(2);
+  return numbers.length > 0 ? (sum / numbers.length).toFixed(2) : "0.00";
 };
 
-app.get('/numbers/:numberid', async (req, res) => {
+app.post('/numbers/:numberid', async (req, res) => {
   const { numberid } = req.params;
 
   if (!['p', 'f', 'e', 'r'].includes(numberid)) {
@@ -44,7 +61,7 @@ app.get('/numbers/:numberid', async (req, res) => {
   });
 
   const windowCurrState = [...numbersWindow];
-  const avg = calculateAverage(numbersWindow);
+  const avg = calculateAverage(numbersWindow.map(Number));
 
   res.json({
     windowPrevState,
