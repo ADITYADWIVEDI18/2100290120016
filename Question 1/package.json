@@ -1,0 +1,16 @@
+{
+  "name": "weatherprojectapi",
+  "version": "1.0.0",
+  "description": "In the way to make my very first project using API",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ADITYA DWIVEDI",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.2",
+    "body-parser": "^1.20.1",
+    "express": "^4.19.2"
+  }
+}
